@@ -5,7 +5,7 @@ import Profile from "./components/Profile/Profile";
 import FriendsList from "./components/FriendsList/FriendsList";
 import RoomList from "./components/RoomList/RoomList";
 
-const ENDPOINT = "http://localhost:4001";
+const ENDPOINT = "http://localhost:3000";
 
 function App() {
   const [tracks, setTracks] = useState([]);

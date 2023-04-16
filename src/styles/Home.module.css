@@ -5,18 +5,16 @@
 }
 
 
-
-.tracksContainer {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
 .action {
   display: flex;
   justify-content: center;
+}
+
+.trackListContainer {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  width: 100%;
 }
 
 .search {
@@ -38,7 +36,6 @@
   letter-spacing: 1px;
   font-weight: 100px;
   padding-left: 10px;
-  padding-right: 10px;
 
 }
 
@@ -470,6 +467,9 @@
   height: 53px;
 }
 
+
+
+
 .vvector1 {
   height: 0.1%;
   width: 0.8%;
@@ -678,17 +678,16 @@ Landing
 }
 .untitledartworkdash3 {
   width: 40px;
+  height: 40px;
   object-fit: cover;
   background-position: center;
   background-size: cover;
-  margin-top:15px;
-
-  /* margin-left: 20%; */
-
+  border-radius: 50%;
+  margin-top: 15px;
   margin-right: 20px;
-
-
+  overflow: hidden;
 }
+
 .image{
   width:16vh;
   height: 16vh;

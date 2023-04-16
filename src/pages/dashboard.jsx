@@ -6,6 +6,7 @@ import {
   Menu,
   MenuItem,
   TextField,
+  Grid
 } from "@mui/material";
 import Lobby from "./lobby";
 import Menua from "@/components/active/_avatarmenu";
@@ -15,7 +16,11 @@ import Center from "@/components/active/_center";
 import TrackList from "@/components/active/_scrolltracklist";
 import useDashboard from "@/hooks/useDashboard";
 
+
+
+
 export const formatTracks = (tracks) => {
+  console.log(tracks)
   return tracks.map((track) => ({
     id: track.id,
     name: track.name,
@@ -27,15 +32,17 @@ export const formatTracks = (tracks) => {
 
 const Dashboard = ({ user, setUser }) => {
 
+  const [loadingPlaylist, setLoadingPlaylist] = useState(false);
+
   const { playlists = [], image_url = "/landing/logo.png", username } = user || {};
+  console.log("Initial playlists: ", playlists)
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
-  const [currentPlaylist, setCurrentPlaylist] = useState(null);
   const {
-    anchorPlaylist,
-    setPlaylist,
     searchTerm,
     setSearchTerm,
     handleSearchChange,
+    anchorLobby,
+    setAnchorLobby,
   } = useDashboard();
 
   const avatar = user?.image_url || "/landing/logo.png";
@@ -46,8 +53,8 @@ const Dashboard = ({ user, setUser }) => {
   const friend = "/dashboard/friend.png";
   const vibepicker = "/dashboard/vibepicker.png";
   const vector = "/dashboard/vector.png";
+  
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -55,18 +62,48 @@ const Dashboard = ({ user, setUser }) => {
   const handleClose = () => {
       setAnchorEl(null);
   };
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const openPlaylist = (event) => {
-    setAnchorEl(event.currentTarget);
+  const openLobby = (event) => {
+    setAnchorLobby(event.currentTarget);
+  };
+
+  const closeLobby = () => {
+    setAnchorLobby(null);
   };
   
-  const closePlaylist = () => {
-      setAnchorEl(null);
+
+  const handlePlaylistSelection = (playlist) => {
+    console.log("Setting selected playlist:", playlist);
+    setLoadingPlaylist(true);
+    setSelectedPlaylist(playlist);
   };
   
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      console.log(
+        "User data from session storage:",
+        JSON.parse(sessionStorage.getItem("user_data"))
+      );
+    }
+  }, []);
+
+
+  useEffect(() => {
+    console.log("Selected playlist changed:", selectedPlaylist);
+  }, [selectedPlaylist]);
+
+  useEffect(() => {
+    if (selectedPlaylist) {
+      setLoadingPlaylist(false);
+    }
+  }, [selectedPlaylist]);
+
   const formatPlaylists = (playlists) => {
     console.log(playlists)
     return playlists.map((playlist) => ({
+      ...playlist, 
       id: playlist.id,
       name: playlist.name,
       author: "8-Bits", // SAMPLE
@@ -78,7 +115,6 @@ const Dashboard = ({ user, setUser }) => {
 
   const handleCreatePlaylist = async (playlistName, filteredTracks) => {
     const accessToken = sessionStorage.getItem('spotify_access_token');
-    console.log("BYYO-1");
     if (filteredTracks.length > 0) {
       const selectedTracks = filteredTracks;
       const finalPlaylistName = playlistName;
@@ -117,96 +153,111 @@ const Dashboard = ({ user, setUser }) => {
     }
   };
 
-return (
-  user && (
-    <div className={styles.all}>
+  return (
+    user && (
+      <div className={styles.all}>
         <div className={styles.dashboard}>
           <div className={styles.menu}>
-            {/* <MenuaItems source={untitledArtwork} /> */}
-            <Button href="/"><img className={styles.signinlogo} src={untitledArtwork} style={{width:"30px", height:"30px"}}/></Button>
-            {/* <MenuaItems source={home} /> */}
+            <MenuaItems source={untitledArtwork} />
+            <MenuaItems source={home} />
   
             <div>
-              <img
-                onClick={handleClick}
-                className={styles.avatar}
-                src={avatar}
-                alt={name}
-              />
-              <h2 className={styles.name}>{name}</h2>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
-              </Menu>
+              {/* This div needs debugging */}
+              <img onClick={handleClick} className={styles.untitledartworkdash3} src={avatar} />
+              <Menua function={handleClose} anchor={anchorEl} />
             </div>
-  
-            <MenuaItems source={friend} />
-  
-            <TextField
-              className={styles.search}
-              id="outlined-basic"
-              label="Search"
-              variant="outlined"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
           </div>
-  
-          <div className={styles.content}>
-            <Center>
-              <img src={vibepicker} alt="vibepicker" />
-              <h2>Playlists</h2>
-            </Center>
-  
-            <div className={styles.tracks}>
-              <TrackList
-                friends={formatPlaylists(playlists)}
-                onSelection={setCurrentPlaylist}
-              />
-            </div>
-  
-            <div className={styles.action}>
-              <Drawer anchor={"right"} open={Boolean(anchorPlaylist)} onClose={closePlaylist}>
-                <Lobby
-                  defaultPlaylistName={"New Playlist"}
-                  tracks={[]}
-                  numSongs={5}
-                  onCreate={handleCreatePlaylist}
-                />
-              </Drawer>
-  
-              {selectedPlaylist && (
-                <TrackList
-                  tracks={formatTracks(selectedPlaylist?.tracks || [])}
-                  onEdit={(tracks) =>
-                    handleUpdatePlaylist(
-                      selectedPlaylist?.id,
-                      selectedPlaylist?.name,
-                      tracks
-                    )
-                  }
-                  onTrackClick={(track) => window.open(track.url, "_blank")}
-                />
-              )}
-              {/* <MainButton name="Create Playlist" loc={openPlaylist} /> */}
-              <Button
-                onClick={openPlaylist}
-                variant="contained"
-                color="primary"
-                className={styles.button}
+          <div
+            className={styles.dashboardbox}
+            style={{
+              paddingTop: "25vh",
+              paddingBottom: "10vh",
+            }}
+          >
+            <div className={styles.innerbox}>
+              <div className={styles.landingdash} style={{ marginLeft: "3%" }}>
+                Hi, {name}
+              </div>
+              <div
+                className={styles.innerbox}
+                style={{
+                  width: "80vw",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginLeft: "3%",
+                }}
               >
-                Create Playlist
-              </Button>
+                <div
+                  className={styles.landingdash}
+                  style={{
+                    fontSize: "15px",
+                    letterSpacing: "5px",
+                    marginTop: "50px",
+                  }}
+                >
+                  You have created {playlists ? playlists.length : 0} playlists
+                </div>
+                <MainButton name="Create playlist" loc={openLobby} height="50px" width="200px" />
+              </div>
+  
+              <div>
+                <input
+                  className={styles.search}
+                  type="text"
+                  placeholder="Search Tracks"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+              </div>
+              <div className={styles.tracksContainer}>
+               {playlists && playlists.length > 0 ? (
+                  <div>
+                    <div className={styles.trackList}>
+                      <h3>Your Playlists:</h3>
+                      <TrackList
+                        items={formatPlaylists(playlists)}
+                        onSelection={handlePlaylistSelection}
+                      />
+                    </div>
+                    <div className={styles.trackList}>
+                      {loadingPlaylist ? (
+                        <div>Loading...</div>
+                      ) : selectedPlaylist ? (
+                        <>
+                          <h3>{selectedPlaylist.name}</h3>
+                          {(() => {
+                            const items = formatTracks(selectedPlaylist?.tracks || []);
+                            console.log("Rendering Selected Playlist TrackList with items:", items);
+                            return <TrackList items={items} />;
+                          })()}
+                        </>
+                      ) : (
+                        <div style={{ width: "100%" }}>
+                          <span className={styles.friendmatch}>
+                            Please select a playlist to view its tracks.
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <span className={styles.friendmatch}>
+                    No playlists available, why don't you make your first!
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
+        <Drawer anchor={"right"} open={Boolean(anchorLobby)} onClose={closeLobby}>
+          <Lobby
+            handleCreatePlaylist={handleCreatePlaylist}
+            closeLobby={closeLobby}
+          />
+        </Drawer>
       </div>
     )
   );
-}  
-
-export default Dashboard;
+  }
+  export default Dashboard;
+  
