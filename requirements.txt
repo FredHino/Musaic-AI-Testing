@@ -1,8 +1,0 @@
-Flask
-flask-CORS
-requests
-pymongo
-bson
-spotipy
-openai
-python-dotenv
