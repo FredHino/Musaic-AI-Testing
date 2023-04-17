@@ -29,7 +29,7 @@ class handler(BaseHTTPRequestHandler):
 
         pm = PlaylistMaker([token])
 
-        # Create the playlist with the given name
+        # Create the playlist with the given
         playlist = pm.create_playlist(playlist_name)
 
         # Populate the playlist with the selected tracks, limited to num_songs
