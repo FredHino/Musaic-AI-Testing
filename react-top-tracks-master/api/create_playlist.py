@@ -32,7 +32,7 @@ class handler(BaseHTTPRequestHandler):
         # Create the playlist with the given name
         playlist = pm.create_playlist(playlist_name)
 
-        # Populate the playlist with the selected tracks, limited to num_song
+        # Populate the playlist with the selected tracks, limited to num_songs
         pm.populate_playlist(playlist, tracks[:num_songs])
 
         # Get the link to the playlist
