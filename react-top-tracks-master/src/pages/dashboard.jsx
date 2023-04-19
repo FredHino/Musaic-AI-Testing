@@ -296,7 +296,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                       onSelection={handlePlaylistSelection}
                       renderAdditionalButton={(item) => (
                         <Link href={item.url} target="_blank" rel="noopener noreferrer" underline="none">
-                          <Button size="small" variant="contained">Open in Spotify</Button>
+                          <Button size="small" variant="contained">Listen On Spotify</Button>
                         </Link>
                       )}
                     />
