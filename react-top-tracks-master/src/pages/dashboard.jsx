@@ -42,6 +42,13 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
   const [joinMusaicDrawerOpen, setJoinMusaicDrawerOpen] = useState(false);
   const [lobbyIdInput, setLobbyIdInput] = useState('');
 
+  const isMobile = () => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth <= 600;
+    }
+    return false;
+  };
+
   const handleLobbyIdInputChange = (event) => {
     setLobbyIdInput(event.target.value);
   };
@@ -237,12 +244,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
               <Menua function={handleClose} anchor={anchorEl} logout={handleLanding} />
             </div>
           </div>
-          <div
-            className={styles.dashboardbox}
-            style={{
-              paddingTop: "60px",
-            }}
-          >
+          <div className={`${styles.dashboardbox} ${isMobile() ? styles.dashboardboxMobile : ''}`} style={{ paddingTop: isMobile() ? '20px' : '60px' }}>
               <div
                 className={styles.innerbox}
                 style={{
@@ -276,17 +278,16 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                 </div>
               </div>
   
-               <Center object={
-               <div>
-                  <input
-                    className={styles.search}
-                    type="text"
-                    placeholder="Search Tracks"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                  />
-                </div>}/>
-              <div className={styles.tracksContainer}>
+              <div className={styles.center}>
+                <input
+                  className={styles.search}
+                  type="text"
+                  placeholder="Search Tracks"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+              </div>
+              <div className={styles.tracksContainer} style={isMobile() ? { flexDirection: 'column', alignItems: 'center' } : {}}>
                {playlists && playlists.length > 0 ? (
                   <div style={{flexDirection:"row", display:"flex", justifyContent:"center"}}>
                     <div className={styles.trackList}>
