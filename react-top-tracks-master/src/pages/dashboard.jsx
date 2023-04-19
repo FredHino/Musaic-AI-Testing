@@ -19,6 +19,9 @@ import TrackList from '@/components/active/_scrolltracklist';
 import VibePicker from './vibePicker';
 import useDashboard from '@/hooks/useDashboard';
 
+import { styled } from '@mui/system';
+
+
 import { getDatabase, ref, set, push, child, update } from 'firebase/database';
 
 
@@ -33,6 +36,14 @@ export const formatTracks = (tracks) => {
     url: track.url,
   }));
 };
+
+const SmallerButton = styled(MainButton)({
+  minWidth: '120px',
+  '@media (max-width: 600px)': {
+    minWidth: '80px',
+    fontSize: '0.7rem',
+  },
+});
 
 const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
 
@@ -229,55 +240,73 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
   return (
     user && (
       <div className={styles.all}>
-        <div className={styles.dashboard} >
+        <div className={styles.dashboard}>
           <div className={styles.menu}>
-              <Button href="/"><img style = {{height: "40px", width: "45px", alignSelf:"center", marginLeft:"10px", marginTop:"10px"}} src={untitledArtwork} /></Button>
+            <Button href="/">
+              <img
+                style={{
+                  height: "40px",
+                  width: "45px",
+                  alignSelf: "center",
+                  marginLeft: "10px",
+                  marginTop: "10px",
+                }}
+                src={untitledArtwork}
+              />
+            </Button>
             <div>
-              <img onClick={handleClick} className={styles.untitledartworkdash3} src={avatar} />
-              <Menua function={handleClose} anchor={anchorEl} logout={handleLanding} />
+              <img
+                onClick={handleClick}
+                className={styles.untitledartworkdash3}
+                src={avatar}
+              />
+              <Menua
+                function={handleClose}
+                anchor={anchorEl}
+                logout={handleLanding}
+              />
             </div>
           </div>
-          <div
-            className={styles.dashboardbox}
-            style={{
-              paddingTop: "60px",
-            }}
-          >
-              <div
-                className={styles.innerbox}
-                style={{
-                  width: "80vw",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginLeft: "3%",
-                  marginBottom: "50px",
-                }}
-              >
-                <div>
-                  <div className={styles.landingdash} style={{ lineHeight:"50px" }}>
-                    Hi, {name}
-                  </div>
-                  <div
-                    className={styles.landingdash}
-                    style={{
-                      fontSize: "15px",
-                      letterSpacing: "5px",
-                      marginTop: "50px",
-                      lineHeight:"20px"
-                    }}
-                  >
-                    
-                    You have created {playlists ? playlists.length : 0} playlists
-                  </div>
+          <div className={styles.dashboardbox} style={{ paddingTop: "60px" }}>
+            <div
+              className={styles.innerbox}
+              style={{
+                width: "80vw",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginLeft: "3%",
+                marginBottom: "50px",
+              }}
+            >
+              <div>
+                <div className={styles.landingdash} style={{ lineHeight: "50px" }}>
+                  Hi, {name}
                 </div>
-                <div>
-                  <MainButton mrr="10px" loc={openCreateMusaicDrawer} name='Create a Musaic'/>
-                  <MainButton loc={openJoinMusaicDrawer} name='Join a Musaic'/>
+                <div
+                  className={styles.landingdash}
+                  style={{
+                    fontSize: "15px",
+                    letterSpacing: "5px",
+                    marginTop: "50px",
+                    lineHeight: "20px",
+                  }}
+                >
+                  You have created {playlists ? playlists.length : 0} playlists
                 </div>
               </div>
+              <div>
+                <SmallerButton
+                  mrr="10px"
+                  loc={openCreateMusaicDrawer}
+                  name="Create"
+                />
+                <SmallerButton loc={openJoinMusaicDrawer} name="Join" />
+              </div>
+            </div>
   
-               <Center object={
-               <div>
+            <Center
+              object={
+                <div>
                   <input
                     className={styles.search}
                     type="text"
@@ -285,30 +314,64 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                     value={searchTerm}
                     onChange={handleSearchChange}
                   />
-                </div>}/>
-              <div className={styles.tracksContainer}>
-               {playlists && playlists.length > 0 ? (
-                  <div style={{flexDirection:"row", display:"flex", justifyContent:"center"}}>
-                    <div className={styles.trackList}>
-                      <h3 style = {{fontWeight:"100", fontFamily:"Inter, sans-serif", letterSpacing:"1px", color:"#ced3fa",fontSize: "15px" }}>Your Playlists:</h3>
-                      <TrackList
+                </div>
+              }
+            />
+            <div className={styles.tracksContainer}>
+              {playlists && playlists.length > 0 ? (
+                <div
+                  style={{
+                    flexDirection: "row",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div className={styles.trackList}>
+                    <h3
+                      style={{
+                        fontWeight: "100",
+                        fontFamily: "Inter, sans-serif",
+                        letterSpacing: "1px",
+                        color: "#ced3fa",
+                        fontSize: "15px",
+                      }}
+                    >
+                      Your Playlists:
+                    </h3>
+                    <TrackList
                       items={formatPlaylists(playlists)}
                       onSelection={handlePlaylistSelection}
                       renderAdditionalButton={(item) => (
-                        <Link href={item.url} target="_blank" rel="noopener noreferrer" underline="none">
-                          <Button size="small" variant="contained">Listen On Spotify</Button>
+                        <Link
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          underline="none"
+                        >
+                          <Button size="small" variant="contained">
+                            Listen On Spotify
+                          </Button>
                         </Link>
                       )}
                     />
-
-                    </div>
-                    <div className={styles.trackList}>
-                      {loadingPlaylist ? (
-                        <div></div>
-                      ) : selectedPlaylist ? (
-                        <>
-                          <h3 style = {{fontWeight:"100", fontFamily:"Inter, sans-serif", letterSpacing:"1px", color:"#ced3fa", fontSize: "15px"}}>{selectedPlaylist.name}</h3>
-                          {(() => {
+                  </div>
+                  <div className={styles.trackList}>
+                    {loadingPlaylist ? (
+                      <div></div>
+                    ) : selectedPlaylist ? (
+                      <>
+                        <h3
+                          style={{
+                            fontWeight: "100",
+                            fontFamily: "Inter, sans-serif",
+                            letterSpacing: "1px",
+                            color: "#ced3fa",
+                            fontSize: "15px",
+                          }}
+                        >
+                          {selectedPlaylist.name}
+                        </h3>
+                        {(() => {
                             const items = formatTracks(selectedPlaylist?.tracks || []);
                             console.log("Rendering Selected Playlist TrackList with items:", items);
                             return <TrackList items={items} />;
