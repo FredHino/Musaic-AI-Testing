@@ -332,20 +332,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
           </div>
         </div>
         {renderDrawers()}
-        <Link
-          href={selectedPlaylist ? selectedPlaylist.url : "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-          underline="none"
-        >
-          <Button
-            className={styles.openInSpotifyButton}
-            variant="contained"
-            disabled={!selectedPlaylist}
-          >
-            Open in Spotify
-          </Button>
-        </Link>
+        
         
       </div>
     )
