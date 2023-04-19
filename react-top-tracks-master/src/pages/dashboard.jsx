@@ -292,16 +292,15 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                     <div className={styles.trackList}>
                       <h3 style = {{fontWeight:"100", fontFamily:"Inter, sans-serif", letterSpacing:"1px", color:"#ced3fa",fontSize: "15px" }}>Your Playlists:</h3>
                       <TrackList
-                        items={formatPlaylists(playlists)}
-                        onSelection={handlePlaylistSelection}
-                        renderAdditionalActions={(item) => (
-                          <Link href={item.openInSpotify} target="_blank" rel="noopener noreferrer">
-                            <Button variant="contained" size="small" style={{ marginLeft: '10px' }}>
-                              Open in Spotify
-                            </Button>
-                          </Link>
-                        )}
-                      />
+                      items={formatPlaylists(playlists)}
+                      onSelection={handlePlaylistSelection}
+                      renderAdditionalButton={(item) => (
+                        <Link href={item.url} target="_blank" rel="noopener noreferrer" underline="none">
+                          <Button size="small" variant="contained">Open in Spotify</Button>
+                        </Link>
+                      )}
+                    />
+
                     </div>
                     <div className={styles.trackList}>
                       {loadingPlaylist ? (
