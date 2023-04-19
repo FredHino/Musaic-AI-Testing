@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import Head from 'next/head';
+import { database } from '@/lib/firebase'; 
+
+import FirebaseContext from '@/contexts/FirebaseContext';
+
+
 
 function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState(null);
@@ -12,7 +17,7 @@ function MyApp({ Component, pageProps }) {
         main: '#8791F9',
         mainPage: '#47A85A',
         light: '#cad6ff',
-        dark: '#0C233B',
+        dark: '#262152',
         text: "white"
       },
       secondary: {
@@ -112,7 +117,9 @@ function MyApp({ Component, pageProps }) {
         </style>
       </Head>
       <ThemeProvider theme={theme}>
-        <Component {...pageProps} user={user} setUser={setUser} />
+      <FirebaseContext.Provider value={{ database }}>
+          <Component {...pageProps} user={user} setUser={setUser} />
+        </FirebaseContext.Provider>
       </ThemeProvider>
     </>
   );

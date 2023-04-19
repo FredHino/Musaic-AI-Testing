@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import styles from '@/styles/Home.module.css'
 import {
   Button,
   Drawer,
+  Grid,
   Menu,
   MenuItem,
   TextField,
-  Grid
-} from "@mui/material";
-import Lobby from "./lobby";
-import Menua from "@/components/active/_avatarmenu";
-import MainButton from "@/components/active/_generalbutton";
-import MenuaItems from "@/components/index/_menuaitems";
-import Center from "@/components/active/_center";
-import TrackList from "@/components/active/_scrolltracklist";
-import useDashboard from "@/hooks/useDashboard";
+} from '@mui/material';
+import Center from '@/components/active/_center';
+import CreateMusaicLobby from './CreateMusaicLobby';
+import JoinMusaicLobby from './JoinMusaicLobby';
+import Lobby from './lobby';
+import MainButton from '@/components/active/_generalbutton';
+import Menua from '@/components/active/_avatarmenu';
+import styles from '@/styles/Home.module.css';
+import TrackList from '@/components/active/_scrolltracklist';
+import VibePicker from './vibePicker';
+import useDashboard from '@/hooks/useDashboard';
 
+import { getDatabase, ref, set, push, child, update } from 'firebase/database';
 
 
 
@@ -30,23 +33,73 @@ export const formatTracks = (tracks) => {
   }));
 };
 
-const Dashboard = ({ user, setUser }) => {
+const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
+
+
+  const [vibePickerOpen, setVibePickerOpen] = useState(false);
+  const [createMusaicDrawerOpen, setCreateMusaicDrawerOpen] = useState(false);
+  const [joinMusaicDrawerOpen, setJoinMusaicDrawerOpen] = useState(false);
+  const [lobbyIdInput, setLobbyIdInput] = useState('');
+
+  const handleLobbyIdInputChange = (event) => {
+    setLobbyIdInput(event.target.value);
+  };
+
+  const openVibePicker = () => {
+    setVibePickerOpen(true);
+  };
+
+  const closeVibePicker = () => {
+    setVibePickerOpen(false);
+  };
+
+  const openCreateMusaicDrawer = () => {
+    setCreateMusaicDrawerOpen(true);
+  };
+
+  const closeCreateMusaicDrawer = () => {
+    setCreateMusaicDrawerOpen(false);
+  };
+
+  const openJoinMusaicDrawer = () => {
+    setJoinMusaicDrawerOpen(true);
+  };
+
+  const closeJoinMusaicDrawer = () => {
+    setJoinMusaicDrawerOpen(false);
+  };
+
+  const handleJoinLobbySubmit = () => {
+    if (lobbyIdInput.trim() !== "") {
+      joinLobby(lobbyIdInput.trim());
+    } else {
+      // Replace alert() with Material-UI Snackbar
+    }
+  };
+
 
   const [loadingPlaylist, setLoadingPlaylist] = useState(false);
-
   const { playlists = [], image_url = "/landing/logo.png", username } = user || {};
-  console.log("Initial playlists: ", playlists)
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+
+
   const {
+    createLobby,
+    joinLobby,
+    handleCreatePlaylist,
     searchTerm,
     setSearchTerm,
     handleSearchChange,
     anchorLobby,
     setAnchorLobby,
-  } = useDashboard();
+    copyToClipboard,
+    musaicKey,
+    setMusaicKey
+  } = useDashboard(user, setSelectedPlaylist, setUser, closeJoinMusaicDrawer);
 
   const avatar = user?.image_url || "/landing/logo.png";
-  const name = user?.username;
+  const name = user?.username || "Guest";
+
   
   const untitledArtwork = "/landing/logo.png";
   const home = "/dashboard/home.png";
@@ -54,6 +107,10 @@ const Dashboard = ({ user, setUser }) => {
   const vibepicker = "/dashboard/vibepicker.png";
   const vector = "/dashboard/vector.png";
   
+  const handleLanding = () => {
+    navigateToLanding();
+  };
+
   const handleLetsGo = () => {
         navigateToSignIn();
   };
@@ -73,7 +130,11 @@ const Dashboard = ({ user, setUser }) => {
   const closeLobby = () => {
     setAnchorLobby(null);
   };
-  
+
+  const [lobbyOpen, setLobbyOpen] = useState(false);
+
+
+
 
   const handlePlaylistSelection = (playlist) => {
     console.log("Setting selected playlist:", playlist);
@@ -114,66 +175,69 @@ const Dashboard = ({ user, setUser }) => {
     }));
   };
   
-
-  const handleCreatePlaylist = async (playlistName, filteredTracks) => {
-    const accessToken = sessionStorage.getItem('spotify_access_token');
-    if (filteredTracks.length > 0) {
-      const selectedTracks = filteredTracks;
-      const finalPlaylistName = playlistName;
-      const userId = user.user_id;
-
-      try {
-        const response = await fetch('/api/create_playlist', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ token: accessToken, name: finalPlaylistName, tracks: selectedTracks, user_id: userId }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          const externalUrl = data.external_url;
-          const createdPlaylist = data.playlist;
-
-          // Add the created playlist to the user's playlists in session storage
-          const currentUserData = JSON.parse(sessionStorage.getItem('user_data'));
-          currentUserData.playlists.push(createdPlaylist);
-          sessionStorage.setItem('user_data', JSON.stringify(currentUserData));
-
-          // Update user state to trigger a re-render of the sidebar
-          setSelectedPlaylist(createdPlaylist)
-          setUser(currentUserData);
-        } else {
-          console.error('Failed to create playlist:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error creating playlist:', error);
-      }
-    } else {
-      alert('Please select at least one track.');
-    }
+  const handleCreatePlaylistAndClose = async (playlistName, filteredTracks) => {
+    await handleCreatePlaylist(playlistName, filteredTracks);
+    closeCreateMusaicDrawer();
   };
+
+
+  const renderDrawers = () => {
+    return (
+      <>
+        <Drawer anchor={"right"} open={Boolean(anchorLobby)} onClose={closeLobby}>
+          <Lobby
+            handleCreatePlaylist={handleCreatePlaylist}
+            closeLobby={closeLobby}
+          />
+        </Drawer>
+        <Drawer
+          anchor="left"
+          open={createMusaicDrawerOpen}
+          onClose={closeCreateMusaicDrawer}
+          sx={{ backgroundColor: "background" }}
+        >
+          <CreateMusaicLobby createLobby={createLobby} openVibePicker={openVibePicker} closeLobby={closeCreateMusaicDrawer} musaicKey={musaicKey} copyToClipboard={copyToClipboard} />
+        </Drawer>
+        <Drawer
+          anchor="left"
+          open={joinMusaicDrawerOpen}
+          onClose={closeJoinMusaicDrawer}
+          sx={{ backgroundColor: "background" }}
+        >
+          <JoinMusaicLobby user={user} joinLobby={joinLobby} closeLobby={closeJoinMusaicDrawer} />
+        </Drawer>
+        <Drawer
+          anchor="left"
+          open={vibePickerOpen}
+          onClose={closeVibePicker}
+          sx={{ backgroundColor: "background" }}
+        >
+          <VibePicker
+            handleCreatePlaylist={handleCreatePlaylistAndClose}
+            pass={closeVibePicker}
+            closeAllDrawers={closeVibePicker}
+          />
+        </Drawer>
+      </>
+    );
+  };
+  
 
   return (
     user && (
       <div className={styles.all}>
-        <div className={styles.dashboard}>
+        <div className={styles.dashboard} >
           <div className={styles.menu}>
-            {/* <MenuaItems source={untitledArtwork} />
-            <MenuaItems source={home} /> */}
               <Button href="/"><img style = {{height: "40px", width: "45px", alignSelf:"center", marginLeft:"10px", marginTop:"10px"}} src={untitledArtwork} /></Button>
             <div>
-              {/* This div needs debugging */}
               <img onClick={handleClick} className={styles.untitledartworkdash3} src={avatar} />
-              <Menua function={handleClose} anchor={anchorEl} logout={handleLetsGo} />
+              <Menua function={handleClose} anchor={anchorEl} logout={handleLanding} />
             </div>
           </div>
           <div
             className={styles.dashboardbox}
             style={{
-              paddingTop: "15vh",
-              // paddingBottom: "10vh",
+              paddingTop: "60px",
             }}
           >
               <div
@@ -187,7 +251,7 @@ const Dashboard = ({ user, setUser }) => {
                 }}
               >
                 <div>
-                  <div className={styles.landingdash} style={{  }}>
+                  <div className={styles.landingdash} style={{ lineHeight:"50px" }}>
                     Hi, {name}
                   </div>
                   <div
@@ -203,23 +267,27 @@ const Dashboard = ({ user, setUser }) => {
                     You have created {playlists ? playlists.length : 0} playlists
                   </div>
                 </div>
-                <MainButton name="Create playlist" loc={openLobby} height="60px" width="200px" />
+                <div>
+                  <MainButton mrr="10px" loc={openCreateMusaicDrawer} name='Create a Musaic'/>
+                  <MainButton loc={openJoinMusaicDrawer} name='Join a Musaic'/>
+                </div>
               </div>
   
-               <Center object={<div>
-                <input
-                  className={styles.search}
-                  type="text"
-                  placeholder="Search Tracks"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                />
-              </div>}/>
+               <Center object={
+               <div>
+                  <input
+                    className={styles.search}
+                    type="text"
+                    placeholder="Search Tracks"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                  />
+                </div>}/>
               <div className={styles.tracksContainer}>
                {playlists && playlists.length > 0 ? (
-                  <div>
+                  <div style={{flexDirection:"row", display:"flex", justifyContent:"center"}}>
                     <div className={styles.trackList}>
-                      {/* <h3>Your Playlists:</h3> */}
+                      <h3 style = {{fontWeight:"100", fontFamily:"Inter, sans-serif", letterSpacing:"1px", color:"#ced3fa",fontSize: "15px" }}>Your Playlists:</h3>
                       <TrackList
                         items={formatPlaylists(playlists)}
                         onSelection={handlePlaylistSelection}
@@ -227,10 +295,10 @@ const Dashboard = ({ user, setUser }) => {
                     </div>
                     <div className={styles.trackList}>
                       {loadingPlaylist ? (
-                        <div>Loading...</div>
+                        <div></div>
                       ) : selectedPlaylist ? (
                         <>
-                          <h3 style = {{fontWeight:"100", fontFamily:"Inter, sans-serif", letterSpacing:"1px", color:"#ced3fa"}}>{selectedPlaylist.name}</h3>
+                          <h3 style = {{fontWeight:"100", fontFamily:"Inter, sans-serif", letterSpacing:"1px", color:"#ced3fa", fontSize: "15px"}}>{selectedPlaylist.name}</h3>
                           {(() => {
                             const items = formatTracks(selectedPlaylist?.tracks || []);
                             console.log("Rendering Selected Playlist TrackList with items:", items);
@@ -254,15 +322,10 @@ const Dashboard = ({ user, setUser }) => {
               </div>
           </div>
         </div>
-        <Drawer anchor={"right"} open={Boolean(anchorLobby)} onClose={closeLobby}>
-          <Lobby
-            handleCreatePlaylist={handleCreatePlaylist}
-            closeLobby={closeLobby}
-          />
-        </Drawer>
+        {renderDrawers()}
       </div>
     )
   );
-  }
-  export default Dashboard;
-  
+};
+
+export default Dashboard;

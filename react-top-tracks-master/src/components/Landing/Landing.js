@@ -73,7 +73,7 @@ function Landing({ navigateToSignIn, setUser, setShowSignIn, accessToken }) {
             <img className={styles.untitledartwork4} src={untitledArtwork} />
             <div className={styles.navigatepages}>
             <Button variant="text" href="/">
-                <span className={styles.buttontext}>TEST</span>
+                <span className={styles.buttontext}>Home</span>
             </Button>
             </div>
             <div className={styles.navigatepages}>
@@ -194,7 +194,8 @@ function Landing({ navigateToSignIn, setUser, setShowSignIn, accessToken }) {
                 backgroundColor: 'grey',
                 color: 'white',
                 flexGrow: 1,
-                width: '100%'
+                width: '100%',
+                height:"100vh"
             }
             }}
         >
@@ -210,7 +211,8 @@ function Landing({ navigateToSignIn, setUser, setShowSignIn, accessToken }) {
                 backgroundColor: 'grey',
                 color: 'white',
                 flexGrow: 1,
-                width: '100%'
+                width: '100%',
+                height:"100vh"
             }
             }}
         >

@@ -9,10 +9,18 @@ import {
     MenuItem,
     Alert
 } from "@mui/material";
+import { useRouter } from 'next/router';
 import FriendListSidebar from './_friendbar';
 import { useState, useEffect } from 'react';
 
 function Menua(props) {
+
+    const router = useRouter();
+
+    const handleLogOut = () => {
+        props.logout();
+        sessionStorage.clear();
+    };
 
     const deleteuser = () => {
         alert("This will delete all tracklist, not integrated yet")
@@ -28,6 +36,10 @@ function Menua(props) {
     const openAndclose = (event) => {
         props.function();
         setFriendlist(event.currentTarget);
+    }
+
+    const handleReplace = () => {
+        router.replace('/');
     }
 
     const friends = [
@@ -73,7 +85,7 @@ function Menua(props) {
             onClose={props.function}
         >   
             <MenuItem>
-            <MainButton name="Log Out" loc={props.logout}/>
+            <MainButton name="Log Out" loc={handleLogOut}/>
             </MenuItem>
             <MenuItem>
             <MainButton name="Delete User Data" loc={deleteuser}/>
@@ -89,16 +101,16 @@ function Menua(props) {
         
             >
                 <div style={{display:"flex", flexDirection:"column", justifyContent:"flex-start", backgroundColor: "rgb(2, 12, 21)"}}>
-                <h2 className={styles.mainheadtext} style = {{alignSelf:"center"}}>FRIEND LIST</h2>
-                <input className={styles.search}
-                    type="text"
-                    placeholder="Search"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    style = {{alignSelf:"center"}}
-                />
-            </div>
-                <FriendListSidebar friends={friends} searchTerm={searchTerm}/>
+                    <h2 className={styles.mainheadtext} style = {{alignSelf:"center"}}>FRIEND LIST</h2>
+                    <input className={styles.search}
+                        type="text"
+                        placeholder="Search"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        style = {{alignSelf:"center", marginBottom:"10px"}}
+                    />
+                    <FriendListSidebar friends={friends} searchTerm={searchTerm}/>
+                </div>
             </Drawer>
         </Menu>
 

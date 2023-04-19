@@ -27,6 +27,13 @@ class PlaylistMaker:
         self.playlistid = ""
         self.mdb = MongodbHelper()
 
+    def get_playlist_image(self, playlist):
+        url = f"https://api.spotify.com/v1/playlists/{playlist.id}/images"
+        response = self._place_get_api_request(url, self.authorizationToken)
+        response_json = response.json()
+        return response_json[0]["url"]
+
+
     def get_recent_tracks(self, limit, token):
         """
         Get the recent tracks played by a user
@@ -250,7 +257,6 @@ class PlaylistMaker:
     # API requests for Spotify
 
     def _place_get_api_request(self, url, auth):
-        print(f"Access token before request: {auth}")
         response = requests.get(
             url,
             headers={
@@ -258,7 +264,6 @@ class PlaylistMaker:
                 "Authorization": f"Bearer {auth}"
             }
         )
-        print(f"Response status code: {response.status_code}")
         return response
 
 
