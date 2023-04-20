@@ -628,20 +628,15 @@ Landing
 */
 
 .dashboard {
-  color: #c1c8ff;
-  width: 100vw;
-  
-  height:100vh;
-  flex-direction: column;
-  /* justify-content: space-between; */
-  align-items: flex-start;
   display: flex;
-  background-color: #191722;
-  color:white;
-  flex-grow: 1;
-  overflow: hidden;
-  
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
 }
+
 
 .dashboard2 {
   width:fit-content;
