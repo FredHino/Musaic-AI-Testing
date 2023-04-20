@@ -1,98 +1,158 @@
-import { useState } from 'react';
 
-
-const shuffleArray = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-};
+import { useState, useEffect } from 'react';
 
 const useVibePicker = () => {
-  const [playlistName, setPlaylistName] = useState('');
   const [phase, setPhase] = useState('input');
-  const [publicRatio, setPublicRatio] = useState(50); // Percentage of public tracks
-  const [limit, setLimit] = useState(20); // The number of tracks to display in the filtered list
+  const [publicRatio, setPublicRatio] = useState(50);
+  const [limit, setLimit] = useState(20);
 
   const [publicTracks, setPublicTracks] = useState([]);
   const [userTracks, setUserTracks] = useState([]);
   const [filteredTracks, setFilteredTracks] = useState([]);
 
-  const applyFilter = () => {
-    // Calculate the number of public and user tracks based on the ratio and limit
-    const numPublicTracks = Math.round((publicRatio / 100) * limit);
-    const numUserTracks = limit - numPublicTracks;
-
-    // Shuffle both lists and slice the required number of tracks
-    shuffleArray(publicTracks);
-    shuffleArray(userTracks);
-    const selectedPublicTracks = publicTracks.slice(0, numPublicTracks);
-    const selectedUserTracks = userTracks.slice(0, numUserTracks);
-
-    // Combine the selected tracks and shuffle the resulting list
-    const combinedTracks = [...selectedPublicTracks, ...selectedUserTracks];
-    shuffleArray(combinedTracks);
-    setFilteredTracks(combinedTracks);
-  };
-
-
+  useEffect(() => {
+    if (publicTracks.length > 0 && userTracks.length > 0) {
+      setFilteredTracks([...publicTracks, ...userTracks]);
+      setPhase("playlist");
+    }
+  }, [publicTracks, userTracks]);
 
   const fetchRecommendedTracks = async (userInput) => {
     try {
-      // Get the user's access token and top artists from session storage
-      const userData = JSON.parse(sessionStorage.getItem('user_data'));
-      console.log('User data from sessionStorage:', userData);
+      setPhase('processing');
 
+      const userData = JSON.parse(sessionStorage.getItem('user_data'));
       const accessToken = sessionStorage.getItem('spotify_access_token');
       const { top_artists: artists } = userData;
 
-      // Prepare the request body
+      console.log('User data:', userData);
+      console.log('Spotify access token:', accessToken);
+  
+  
       const requestBody = {
-        token: accessToken,
         input: userInput,
         artist_ids: artists,
       };
-      console.log('Request body:', requestBody);
-      const response = await fetch('/api/get_GPT_tracks', {
+  
+      // Fetch GPT artists
+      const gptResponse = await fetch('/api/get_GPT_artists', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(requestBody),
       });
-
-      if (!response.ok) {
-        throw new Error(`Error fetching recommended tracks: ${response.status} ${response.statusText}`);
+  
+      if (!gptResponse.ok) {
+        throw new Error(`Error fetching GPT artists: ${gptResponse.status} ${gptResponse.statusText}`);
       }
+  
+      const gptData = await gptResponse.json();
+      console.log('GPT artists:', gptData);
+      const { public_artists, user_artists } = gptData;
+  
+      console.log('1. Before filtering artists');
+      // Filter out empty artist names
+      const filteredPublicArtists = public_artists.filter(artist => artist !== '');
+      const filteredUserArtists = user_artists.filter(artist => artist !== '');
+  
+      console.log('2. After filtering artists');
 
+  
+  
+      // Function to fetch tracks in batches
+      const fetchTracks = async (artists, isPublic) => {
+        console.log("1. beginning");
+        let tracks = [];
+      
+        for (const artist of artists) {
+          if (tracks.length >= 30) {
+            break;
+          }
+      
+          const requestBody = {
+            token: accessToken,
+            artist: artist,
+          };
+          console.log("2. fetch");
+          console.log(requestBody);
+          const response = await fetch("/api/get_GPT_tracks", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          });
+      
+          if (!response.ok) {
+            throw new Error(`Error fetching recommended tracks: ${response.status} ${response.statusText}`);
+          }
+      
+          const data = await response.json();
+          const fetchedTracks = data.tracks;
+          console.log("3");
+          console.log(isPublic)
+          console.log(fetchedTracks);
+      
+          if (fetchedTracks && fetchedTracks.length > 0) {
+            console.log("Adding Tracks, here is tracksToAdd and tracks before")
+            const tracksToAdd = fetchedTracks.slice(0, 30 - tracks.length);
+            console.log(tracksToAdd)
+            console.log(tracks)
+            tracks = [...tracks, ...tracksToAdd];
+            console.log("And here is tracks after: ")
+            console.log(tracks)
+          }
 
-      const data = await response.json();
-      console.log(data);
-      setPublicTracks((prevTracks) => [...prevTracks, ...data.public_tracks]);
-      setUserTracks((prevTracks) => [...prevTracks, ...data.user_tracks]);
+          else {
+            console.log("fetchedTracks is not defined yet or has a length of 0")
+          }
+        }
+        console.log("4. End of fetchTracks loop");
+        console.log(isPublic)
+        console.log(tracks)
+        return tracks;
+      };
+      
+      
+  
+      console.log('5. Before fetching tracks');
     
-      setPhase('playlist');
+      const publicFetchedTracks = await fetchTracks(filteredPublicArtists, true);
+      console.log('5.5, before fetching user tracks')
+      const userFetchedTracks = await fetchTracks(filteredUserArtists, false);
+      
+
+      setPublicTracks(publicFetchedTracks);
+      setUserTracks(userFetchedTracks);
+      
+
+      
+      console.log("6. After fetching tracks");
+      console.log("Public tracks:", publicTracks);
+      console.log("User tracks:", userTracks);
+      console.log("Final Filtered tracks:", filteredTracks);
+
+      setPhase("playlist");
+
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching recommended tracks:', error.message);
     }
   };
   
-
-
+  
+  
   // Other functions to handle playlist customization
 
   return {
     phase,
     filteredTracks,
     fetchRecommendedTracks,
-    applyFilter,
-    playlistName,
-    setPlaylistName,
     publicRatio,
     setPublicRatio,
     limit,
     setLimit,
-  };  
+  };
 };
 
 export default useVibePicker;

@@ -1,4 +1,4 @@
-import openai_async as openai
+import openai
 
 class PlaylistMakerGPT:
 
@@ -6,34 +6,21 @@ class PlaylistMakerGPT:
         self.api_key = api_key
         openai.api_key = self.api_key
 
-    async def get_artists_from_input(self, user_input, top_artists):
+    def get_artists_from_input(self, user_input, top_artists):
+        # Helper function to process artist list from response
+        def process_artist_list(artist_list_text):
+            artist_list = artist_list_text.strip().split(', ')
+            artist_list = [artist.strip().rstrip('"').replace('"', '').replace('.', '') for artist in artist_list if artist and artist.strip()]
+            return artist_list
+
         # Get the artist list from ChatGPT
-        messages = [
-        {
-            "role": "user",
-            "content": f"Your output will be a list of artists names. Based on the meaning and vibe of this phrase '{user_input}', output a list of 3 artists on Spotify who you think best evoke the feeling expressed in the phrase. If an artist's name is included in the phrase, include that artist too."
-        }
-        ]
-        response = await openai.ChatCompletion.create_async(model="gpt-3.5-turbo", messages=messages)
-        artist_list_text_1 = response.choices[0].message['content'].strip()
-        artist_text_lines_1 = artist_list_text_1.split('\n')
-        artist_list_1 = [line.partition('. ')[-1].strip().rstrip('"') for line in artist_text_lines_1 if line]
-        artist_list_1 = [line.partition('. ')[-1].strip().replace('"', '') for line in artist_text_lines_1 if line]
-        artist_list_1 = [line.partition('. ')[-1].strip().replace('.', '') for line in artist_text_lines_1 if line]
+        prompt = f"Based on the following input phrase, provide a comma separated list consisting of nothing but the names of 8 artists on Spotify, who you think best evoke the feeling expressed in the phrase. If the phrase is too vague, use your best judgment and general knowledge to suggest artists that might fit. You must return a list of artists. If an artist's name is included in the phrase, include that artist too. Input phrase: '{user_input}'"
+        response = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=500, n=1, stop=None, temperature=0.25)
 
-        messages = [
-            {
-                "role": "user",
-                "content": f"Your output will be a list of artists names. You will be given a list of artists and a phrase. Your response should be a re-ordered list of the artists, arranged based on how closely they match the feeling, energy, or spirit of the phrase. The 0-indexed artist in your resposne should be the most similar to the phrase.  Here is the phrase: '{user_input}', and here is the list: '{top_artists}'"
-            }
-        ]
-        response = await openai.ChatCompletion.create_async(model="gpt-3.5-turbo", messages=messages)
-        artist_list_text_2 = response.choices[0].message['content'].strip()
-        artist_text_lines_2 = artist_list_text_2.split('\n')
-        artist_list_2 = [line.partition('. ')[-1].strip().rstrip('"') for line in artist_text_lines_2 if line]
-        artist_list_2 = [line.partition('. ')[-1].strip().replace('"', '') for line in artist_text_lines_2 if line]
-        artist_list_2 = [line.partition('. ')[-1].strip().replace('.', '') for line in artist_text_lines_2 if line]
+        artist_list_1 = process_artist_list(response.choices[0].text)
 
-        artist_list = artist_list_2 + artist_list_1
+        prompt = f"Based on the following input phrase and list of artists, provide a comma separated list consisting of nothing but the names of 8 artists from the list who you think best evoke the feeling expressed in the phrase. If the phrase is too vague, use your best judgment and general knowledge to suggest artists that might fit. You must return a list of artists. If an artist's name is included in the phrase, include that artist too. Input phrase: '{user_input}', and here is the list of artists:'{', '.join(top_artists)}'"
+        response = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=500, n=1, stop=None, temperature=0.25)
+        artist_list_2 = process_artist_list(response.choices[0].text)
 
         return [artist_list_2, artist_list_1]
