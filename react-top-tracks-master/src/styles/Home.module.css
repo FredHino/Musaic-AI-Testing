@@ -938,6 +938,7 @@ Lobby stuff
 .trackList {
   margin: 10px;
   flex-basis: calc(50% - 20px);
+  width: 100%;
 }
 
 /* For mobile devices */
