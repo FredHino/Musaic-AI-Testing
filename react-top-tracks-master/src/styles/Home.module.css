@@ -933,6 +933,7 @@ Lobby stuff
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .trackList {
@@ -945,6 +946,7 @@ Lobby stuff
 @media (max-width: 768px) {
   .trackList {
     flex-basis: calc(100% - 20px);
+    width: 100%;
   }
 }
 
