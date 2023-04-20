@@ -15,9 +15,7 @@ import JoinMusaicLobby from './JoinMusaicLobby';
 import Lobby from './lobby';
 import MainButton from '@/components/active/_generalbutton';
 import Menua from '@/components/active/_avatarmenu';
-// import styles from '@/styles/Home.module.css';
-import styles from '@/styles/HomeMobile.module.css';
-
+import styles from '@/styles/Home.module.css';
 import TrackList from '@/components/active/_scrolltracklist';
 import VibePicker from './vibePicker';
 import useDashboard from '@/hooks/useDashboard';
@@ -232,24 +230,24 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
 
   return (
     user && (
-      <div className={styles['all']}>
-        <div className={styles['dashboard']} >
-          <div className={styles['menu']}>
+      <div className={styles.all}>
+        <div className={styles.dashboard} >
+          <div className={styles.menu}>
               <Button href="/"><img style = {{height: "40px", width: "45px", alignSelf:"center", marginLeft:"10px", marginTop:"10px"}} src={untitledArtwork} /></Button>
               <MenuaItems source={spotify_yt} />
             <div>
-              <img onClick={handleClick} className={styles['untitledartworkdash3']} src={avatar} />
+              <img onClick={handleClick} className={styles.untitledartworkdash3} src={avatar} />
               <Menua function={handleClose} anchor={anchorEl} logout={handleLanding} user={user}/>
             </div>
           </div>
           <div
-            className={styles['dashboardbox']}
+            className={styles.dashboardbox}
             style={{
               paddingTop: "60px",
             }}
           >
               <div
-                className={styles['innerbox']}
+                className={styles.innerbox}
                 style={{
                   width: "80vw",
                   flexDirection: "row",
@@ -259,11 +257,11 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                 }}
               >
                 <div>
-                  <div className={styles['landingdash']} style={{ lineHeight:"50px" }}>
+                  <div className={styles.landingdash} style={{ lineHeight:"50px" }}>
                     Hi, {name}
                   </div>
                   <div
-                    className={styles['landingdash']}
+                    className={styles.landingdash}
                     style={{
                       fontSize: "15px",
                       letterSpacing: "5px",
@@ -289,17 +287,17 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                <Center object={
                <div>
                   <input
-                    className={styles['search']}
+                    className={styles.search}
                     type="text"
                     placeholder="Search Tracks"
                     value={searchTerm}
                     onChange={handleSearchChange}
                   />
                 </div>}/>
-              <div className={styles['tracksContainer']}>
+              <div className={styles.tracksContainer}>
                {playlists && playlists.length > 0 ? (
                   <div style={{flexDirection:"row", display:"flex", justifyContent:"center"}}>
-                    <div className={styles['trackList']}>
+                    <div className={styles.trackList}>
                       <h3 style = {{fontWeight:"100", fontFamily:"Inter, sans-serif", letterSpacing:"1px", color:"#ced3fa",fontSize: "15px" }}>Your Musaics:</h3>
                       <TrackList
                       items={formatPlaylists(playlists)}
@@ -313,7 +311,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                     />
 
                     </div>
-                    <div className={styles['trackList']}>
+                    <div className={styles.trackList}>
                       {loadingPlaylist ? (
                         <div></div>
                       ) : selectedPlaylist ? (
@@ -327,7 +325,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                         </>
                       ) : (
                         <div style={{ width: "100%" }}>
-                          <span className={styles['friendmatch']}>
+                          <span className={styles.friendmatch}>
                             Please select a Musaic to view its tracks.
                           </span>
                         </div>
@@ -335,7 +333,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                     </div>
                   </div>
                 ) : (
-                  <span className={styles['friendmatch']}>
+                  <span className={styles.friendmatch}>
                     No Musaics available, why don't you make your first!
                   </span>
                 )}
