@@ -664,6 +664,20 @@ Landing
   
 }
 
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px 30px;
+  background-color: #191722;
+  z-index: 1000;
+}
+
+
 .dashboardbox{
   /* align-items: flex-start;
    */

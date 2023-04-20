@@ -232,6 +232,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
     user && (
       <div className={styles.all}>
         <div className={styles.dashboard} >
+          <div className={styles.navbar} >
           <div className={styles.menu}>
               <Button href="/"><img style = {{height: "40px", width: "45px", alignSelf:"center", marginLeft:"10px", marginTop:"10px"}} src={untitledArtwork} /></Button>
               <MenuaItems source={spotify_yt} />
@@ -239,6 +240,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
               <img onClick={handleClick} className={styles.untitledartworkdash3} src={avatar} />
               <Menua function={handleClose} anchor={anchorEl} logout={handleLanding} user={user}/>
             </div>
+          </div>
           </div>
           <div
             className={styles.dashboardbox}
