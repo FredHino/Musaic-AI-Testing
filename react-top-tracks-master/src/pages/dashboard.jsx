@@ -279,8 +279,17 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                   </div>
                 </div>
                 <div>
-                  <MainButton mrr="10px" loc={openCreateMusaicDrawer} name='Create a Musaic'/>
-                  <MainButton loc={openJoinMusaicDrawer} name='Join a Musaic'/>
+                  <MainButton
+                    mrr="10px"
+                    loc={openCreateMusaicDrawer}
+                    name="Create a Musaic"
+                    style={{ padding: "8px 16px" }} // Add padding here
+                  />
+                  <MainButton
+                    loc={openJoinMusaicDrawer}
+                    name="Join a Musaic"
+                    style={{ padding: "8px 16px" }} // Add padding here
+                  />
                 </div>
               </div>
   
