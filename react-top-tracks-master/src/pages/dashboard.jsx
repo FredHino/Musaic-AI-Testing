@@ -307,7 +307,6 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                 </div>}/>
                 <div className={styles.tracksContainer}>
               {/* Your Musaics section */}
-              <div className={`${styles.trackListWrapper}`}>
                 <div className={styles.trackList}>
                   <h3 style={{ fontWeight: '100', fontFamily: 'Inter, sans-serif', letterSpacing: '1px', color: '#ced3fa', fontSize: '15px' }}>Your Musaics:</h3>
                   <TrackList
@@ -320,9 +319,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                     )}
                   />
                 </div>
-              </div>
               {/* Selected Playlist section */}
-              <div className={`${styles.trackListWrapper}`}>
                 <div className={styles.trackList}>
                   {loadingPlaylist ? (
                     <div></div>
@@ -343,7 +340,6 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                     </div>
                   )}
                 </div>
-              </div>
             </div>
 
           </div>
