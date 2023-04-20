@@ -769,10 +769,10 @@ Landing
   display:flex;
   line-height: 20px;
 }
-.tracksContainer{
+/* .tracksContainer{
   display: flex;
   flex-direction: column;
-}
+} */
 .innerbox{
   display: flex;
   align-self: center;
@@ -925,3 +925,24 @@ Lobby stuff
   background-size: cover;
   margin-top: 15px;
 }
+
+.tracksContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.trackListWrapper {
+  flex: 1;
+  min-width: 350px;
+  max-width: 450px;
+  margin: 0 10px;
+}
+
+@media (max-width: 768px) {
+  .trackListWrapper {
+    min-width: 100%;
+    margin: 10px 0;
+  }
+}
+
