@@ -5,3 +5,4 @@ package-lock.json
 .old
 .next
 .env
+.DS_Store
