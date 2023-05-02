@@ -666,7 +666,7 @@ Landing
   top: 0;
   left: 0;
   width: 100%;
-  padding: 30px;
+  padding: 0px 30px;
   background-color: #191722;
   z-index: 1000;
 }
