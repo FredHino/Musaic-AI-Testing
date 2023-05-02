@@ -279,7 +279,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                     mrr="10px"
                     loc={openCreateMusaicDrawer}
                     name="Create a Musaic"
-                    style={{ padding: "8px 16px" }} // Add padding here
+                    style={{ margin: "10px 10px 0px 0px" }} // Add padding here
                   />
                   {playlists.length > 0 && (
                       <MainButton coloringg="red" mtt="10px" name='Delete Playlists'/>
@@ -308,7 +308,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                     onSelection={handlePlaylistSelection}
                     renderAdditionalButton={(item) => (
                       <Link href={item.url} target="_blank" rel="noopener noreferrer" underline="none">
-                        <Button size="small" variant="contained" style={{ padding: "8px 16px"}}>Open in Spotify</Button>
+                        <Button size="small" variant="contained">Open in Spotify</Button>
                       </Link>
                     )}
                   />
