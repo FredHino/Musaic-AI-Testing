@@ -1,9 +1,9 @@
 import * as React from "react";
-import { useState, useEffect } from 'react';
 import styles from '@/styles/Home.module.css';
 import {
   TextField,
 } from "@mui/material";
+import { useState } from 'react';
 import Banner from "@/components/active/_bannerandsub";
 import MainBox from "@/components/active/_mainbox";
 import GPTinput from "@/components/GPTinput";
@@ -15,7 +15,7 @@ import Spinner from "@/components/_loadingscreen";
 import Center from "@/components/active/_center";
 import { formatTracks } from "./dashboard";
 
-export default function VibePicker({ handleCreatePlaylist, closeAllDrawers, pass }) {
+export default function VibePicker({ handleCreatePlaylist, closeAllDrawers }) {
 
   const {
     phase,
@@ -26,8 +26,6 @@ export default function VibePicker({ handleCreatePlaylist, closeAllDrawers, pass
     limit,
     setLimit,
   } = useVibePicker(); 
-
-  const [limitedTracks, setLimitedTracks] = useState([]);
 
   const [userInput, setUserInput] = useState("");
   const [playlistName, setPlaylistName] = useState(userInput);
@@ -41,7 +39,7 @@ export default function VibePicker({ handleCreatePlaylist, closeAllDrawers, pass
   };
 
   const handleCreatePlaylistClick = () => {
-    handleCreatePlaylist(playlistName, limitedTracks);
+    handleCreatePlaylist(playlistName, filteredTracks);
     closeAllDrawers();
   };
 
@@ -64,12 +62,7 @@ export default function VibePicker({ handleCreatePlaylist, closeAllDrawers, pass
     }
   };
 
-
-  useEffect(() => {
-    setLimitedTracks(filteredTracks.slice(0, limit));
-  }, [filteredTracks, limit]);
-  
-  const trackDisplayDictionary = formatTracks(limitedTracks);
+  const trackDisplayDictionary = formatTracks(filteredTracks);
 
   return (
     <div className={styles.all} style={{ backgroundColor: "#282634", overflow:"hidden", height:"100vh" }}>
@@ -79,7 +72,6 @@ export default function VibePicker({ handleCreatePlaylist, closeAllDrawers, pass
             main="VIBE PICKER"
             sub="CREATE YOUR MUSIC:"
             more="TRY IT TODAY"
-            pass={pass}
           />
         }
         object2={
@@ -102,7 +94,7 @@ export default function VibePicker({ handleCreatePlaylist, closeAllDrawers, pass
             )}
             {phase === 'processing' && (
               <>
-                <h3 className={styles.slidertext}>Building your Musaic...</h3>
+                <h3>Building your Musaic...</h3>
                 <Spinner/>
               </>
             )}
@@ -114,32 +106,24 @@ export default function VibePicker({ handleCreatePlaylist, closeAllDrawers, pass
                   onChange={handlePlaylistNameChange}
                   style={{ marginBottom: "1rem" }}
                 />
-                <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <label className={styles.slidertext}>User Influence</label>
-                    <Slider
-                      value={publicRatio}
-                      min={0}
-                      max={100}
-                      step={1}
-                      onChange={handlePublicRatioSliderChange}
-                      valueLabelDisplay="auto"
-                      style={{ width: "200px", marginBottom: "20px" }}
-                    />
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <label className={styles.slidertext}># of tracks</label>
-                    <Slider
-                      value={limit}
-                      min={1}
-                      max={Math.min(filteredTracks.length, 60)} // Use the minimum of the filteredTracks.length and 100
-                      step={1}
-                      onChange={handleLimitSliderChange}
-                      valueLabelDisplay="auto"
-                      style={{ width: "200px", marginBottom: "20px" }}
-                    />
-                  </div>
-                </div>
+                <Slider
+                  value={publicRatio}
+                  min={0}
+                  max={100}
+                  step={1}
+                  onChange={handlePublicRatioSliderChange}
+                  valueLabelDisplay="auto"
+                  style={{ width: "200px", marginBottom: "20px" }}
+                />
+                <Slider
+                  value={limit}
+                  min={1}
+                  max={filteredTracks.length} // Use the length of the filteredTracks array
+                  step={1}
+                  onChange={handleLimitSliderChange}
+                  valueLabelDisplay="auto"
+                  style={{ width: "200px", marginBottom: "20px" }}
+                />
                 <TrackList items={trackDisplayDictionary} />
                 <div style={{height:"30px"}}></div>
                 <MainButton

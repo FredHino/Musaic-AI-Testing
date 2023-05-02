@@ -25,6 +25,7 @@ const TrackList = ({ items, onSelection = () => {}, renderAdditionalButton }) =>
       <div className={styles.text}>
         <h3
           className={styles.nametext}
+          onClick={() => window.open(item.url, "_blank")}
         >
           {item.name}
         </h3>

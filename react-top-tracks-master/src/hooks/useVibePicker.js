@@ -10,39 +10,12 @@ const useVibePicker = () => {
   const [userTracks, setUserTracks] = useState([]);
   const [filteredTracks, setFilteredTracks] = useState([]);
 
-  
   useEffect(() => {
     if (publicTracks.length > 0 && userTracks.length > 0) {
-      const userTracksPercentage = publicRatio / 100;
-      const publicTracksPercentage = 1 - userTracksPercentage;
-
-      const maxPossibleUserTracks = Math.min(
-        Math.round(publicTracks.length * userTracksPercentage / publicTracksPercentage),
-        userTracks.length
-      );
-      const maxPossiblePublicTracks = Math.min(
-        Math.round(userTracks.length * publicTracksPercentage / userTracksPercentage),
-        publicTracks.length
-      );
-
-      const selectedUserTracks = userTracks.slice(0, maxPossibleUserTracks);
-      const selectedPublicTracks = publicTracks.slice(0, maxPossiblePublicTracks);
-
-      // Combine and shuffle the selected tracks
-      const selectedTracks = shuffleArray([...selectedPublicTracks, ...selectedUserTracks]);
-  
-      setFilteredTracks(selectedTracks);
+      setFilteredTracks([...publicTracks, ...userTracks]);
       setPhase("playlist");
     }
-  }, [publicTracks, userTracks, publicRatio, limit]);
-  
-  const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  };
+  }, [publicTracks, userTracks]);
 
   const fetchRecommendedTracks = async (userInput) => {
     try {
@@ -93,7 +66,7 @@ const useVibePicker = () => {
         let tracks = [];
       
         for (const artist of artists) {
-          if (tracks.length >= 60) {
+          if (tracks.length >= 30) {
             break;
           }
       
@@ -123,7 +96,7 @@ const useVibePicker = () => {
       
           if (fetchedTracks && fetchedTracks.length > 0) {
             console.log("Adding Tracks, here is tracksToAdd and tracks before")
-            const tracksToAdd = fetchedTracks.slice(0, 60 - tracks.length);
+            const tracksToAdd = fetchedTracks.slice(0, 30 - tracks.length);
             console.log(tracksToAdd)
             console.log(tracks)
             tracks = [...tracks, ...tracksToAdd];
