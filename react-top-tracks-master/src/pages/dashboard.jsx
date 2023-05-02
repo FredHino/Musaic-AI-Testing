@@ -172,7 +172,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
       ...playlist, 
       id: playlist.id,
       name: playlist.name,
-      author: name, // SAMPLE
+      author: "", // SAMPLE
       avatar: playlist.image_url || "/landing/logo.png",
       url: playlist.url,
       openInSpotify: playlist.spotify_url, // Add this line
