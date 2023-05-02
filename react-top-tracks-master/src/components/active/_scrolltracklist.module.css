@@ -1,7 +1,7 @@
 .mainbox {
   width: 100%;
   margin: 0px auto;
-  height: 45vh;
+  height:auto;
   overflow-y: scroll;
   padding: 0;
 }

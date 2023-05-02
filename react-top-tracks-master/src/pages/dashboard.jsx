@@ -234,7 +234,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
         <div className={styles.dashboard} >
           <div className={styles.navbar} >
           <div className={styles.menu}>
-              <Button href="/"><img style = {{height: "40px", width: "45px", alignSelf:"center", marginTop:"10px"}} src={untitledArtwork} /></Button>
+              <Button href="/"><img style = {{height: "40px", width: "45px", alignSelf:"center"}} src={untitledArtwork} /></Button>
               <MenuaItems source={spotify_yt} />
             <div>
               <img onClick={handleClick} className={styles.untitledartworkdash3} src={avatar} />
@@ -297,13 +297,13 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
   
                <Center object={
                <div>
-                  <input
+                  {/* <input
                     className={styles.search}
                     type="text"
                     placeholder="Search Tracks"
                     value={searchTerm}
                     onChange={handleSearchChange}
-                  />
+                  /> */}
                 </div>}/>
                 <div className={styles.tracksContainer}>
               {/* Your Musaics section */}
