@@ -32,7 +32,7 @@ class handler(BaseHTTPRequestHandler):
             for id in mdb.lobbies_db[lobby_link].find():
                 grouped_users.append(id)
 
-        # TO DO: modify GPT tracks to iterate through ids and populate playlist
+        # TO DO modify GPT tracks to iterate through ids and populate playlist
         # how to handle when new user entered room?
         # how to know when everyone is done?
 
