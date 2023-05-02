@@ -74,14 +74,6 @@ export default function VibePicker({ handleCreatePlaylist, closeAllDrawers, pass
   return (
     <div className={styles.all} style={{ backgroundColor: "#282634", overflow:"hidden", height:"100vh" }}>
       <MainBox
-        object1={
-          <Banner
-            main="VIBE PICKER"
-            sub="CREATE YOUR MUSIC:"
-            more="TRY IT TODAY"
-            pass={pass}
-          />
-        }
         object2={
           <Center object = {
           <div
@@ -150,13 +142,6 @@ export default function VibePicker({ handleCreatePlaylist, closeAllDrawers, pass
                   Create Playlist
                 </MainButton>
                 <div style={{height:"20px"}}></div>
-                <MainButton
-                  loc={() => handleCreatePlaylistClick()}
-                  height="60px" width="100px"
-                  name = 'Get Poster'
-                >
-                  Get Poster
-                </MainButton>
               </>
             )}
           </div>

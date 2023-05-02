@@ -61,14 +61,6 @@ const Lobby = ({ musaicKey, handleCreatePlaylist, closeLobby, ...props }) => {
 
   return (
     <MainBox
-      object1={
-        <Banner
-          main="LOBBY"
-          sub="INVITATION LINK:"
-          more="http://localhost:3000/lobby"
-          pass={closeLobby}
-        />
-      }
       object2={
         <div
           className={styles.dashboardbox}
