@@ -76,9 +76,9 @@ export default function VibePicker({ handleCreatePlaylist, closeAllDrawers, pass
       <MainBox
         object1={
           <Banner
-            main="VIBE PICKER"
-            sub="CREATE YOUR MUSIC:"
-            more="TRY IT TODAY"
+            main=""
+            sub=""
+            more=""
             pass={pass}
           />
         }
@@ -102,7 +102,7 @@ export default function VibePicker({ handleCreatePlaylist, closeAllDrawers, pass
             )}
             {phase === 'processing' && (
               <>
-                <h3 className={styles.slidertext}>Building your Musaic...</h3>
+                <h3 className={styles.slidertext}>Building Your Musaic...</h3>
                 <Spinner/>
               </>
             )}

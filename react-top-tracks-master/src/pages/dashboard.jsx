@@ -172,7 +172,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
       ...playlist, 
       id: playlist.id,
       name: playlist.name,
-      author: "8-Bits", // SAMPLE
+      author: name, // SAMPLE
       avatar: playlist.image_url || "/landing/logo.png",
       url: playlist.url,
       openInSpotify: playlist.spotify_url, // Add this line
@@ -283,7 +283,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                     mrr="10px"
                     loc={openCreateMusaicDrawer}
                     name="Create a Musaic"
-                    style={{ padding: "8px 16px" }} // Add padding here
+                    style={{ padding: "8px 8px 8px 8px" }} // Add padding here
                   />
                 </div>
               </div>
