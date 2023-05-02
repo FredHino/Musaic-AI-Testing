@@ -277,9 +277,9 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                   <div>
                     <MainButton
                     mrr="10px"
+                    mtt="10px"
                     loc={openCreateMusaicDrawer}
                     name="Create a Musaic"
-                    style={{ margin: "10px 10px 0px 0px" }} // Add padding here
                   />
                   {playlists.length > 0 && (
                       <MainButton coloringg="red" mtt="10px" name='Delete Playlists'/>
