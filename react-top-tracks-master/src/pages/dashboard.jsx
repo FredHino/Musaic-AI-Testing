@@ -234,7 +234,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
         <div className={styles.dashboard} >
           <div className={styles.navbar} >
           <div className={styles.menu}>
-              <Button href="/"><img style = {{height: "40px", width: "45px", alignSelf:"center", marginTop:"10px"}} src={untitledArtwork} /></Button>
+              <Button href="/"><img style = {{height: "40px", width: "45px", alignSelf:"center", marginLeft:"10px", marginTop:"10px"}} src={untitledArtwork} /></Button>
               <MenuaItems source={spotify_yt} />
             <div>
               <img onClick={handleClick} className={styles.untitledartworkdash3} src={avatar} />
