@@ -283,7 +283,7 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                     mrr="10px"
                     loc={openCreateMusaicDrawer}
                     name="Create a Musaic"
-                    style={{ padding: 8 }} // Add padding here
+                    style={{ padding: "8px" }} // Add padding here
                   />
                 </div>
               </div>
