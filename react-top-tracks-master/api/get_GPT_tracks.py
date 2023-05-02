@@ -38,7 +38,7 @@ class handler(BaseHTTPRequestHandler):
                         related_tracks_objects = [Track(name=track.name, id=track.id, artist=track.artist, image_url=track.image_url) for track in related_track_ids]
 
                         mdb.store_artist_tracks_in_database(artist_name, list(unique_tracks), related_tracks_objects)
-                # Retrieving all related tracks
+                # Retrieving all related track
                 artist_tracks = mdb.artists_db[first_char].find_one({"name": artist_name}, {'_id': 0, 'top_tracks': 1, 'related_tracks': 1})
                 if artist_tracks:
                     top_tracks = artist_tracks.get('top_tracks', [])
