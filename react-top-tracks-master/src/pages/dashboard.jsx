@@ -275,16 +275,17 @@ const Dashboard = ({ navigateToSignIn, navigateToLanding, user, setUser }) => {
                     You've made {playlists ? playlists.length : 0} Musaics
                   </div>
                   <div>
-                  {playlists.length > 0 && (
-                      <MainButton coloringg="red" mtt="10px" name='Delete Playlists'/>
-                    )}
-                  </div>
-                  <MainButton
+                    <MainButton
                     mrr="10px"
                     loc={openCreateMusaicDrawer}
                     name="Create a Musaic"
                     style={{ padding: "8px 16px" }} // Add padding here
                   />
+                  {playlists.length > 0 && (
+                      <MainButton coloringg="red" mtt="10px" name='Delete Playlists'/>
+                    )}
+                  </div>
+                  
                 </div>
               </div>
   
