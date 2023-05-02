@@ -1,7 +1,6 @@
 from http.server import BaseHTTPRequestHandler
 from json import dumps, loads
 
-from api.helpers.openai_helper import PlaylistMakerGPT
 from api.helpers.spotify_helper import PlaylistMaker
 from api.schemas.track import Track
 from api.helpers.mongodb_helper import MongodbHelper
@@ -29,8 +28,8 @@ class handler(BaseHTTPRequestHandler):
                     results = sp.search(query=f"artist:{artist_name}", search_type="artist")
                     if results['artists']['items']:
                         artist_id = results['artists']['items'][0]['id']
-                        # Get the artist's top 8 tracks
-                        top_tracks = sp.artist_top_tracks(artist_id, limit=8, country='US')
+                        # Get the artist's top 3 tracks
+                        top_tracks = sp.artist_top_tracks(artist_id, limit=3, country='US')
                         # Remove duplicate tracks
                         unique_tracks = {track['name']: Track(name=track['name'], id=track['id'], artist=artist_name, image_url=track.get('album', {}).get('images', [])[0].get('url') if track.get('album', {}).get('images') else None) for track in top_tracks}.values()
 
@@ -38,7 +37,7 @@ class handler(BaseHTTPRequestHandler):
                         related_tracks_objects = [Track(name=track.name, id=track.id, artist=track.artist, image_url=track.image_url) for track in related_track_ids]
 
                         mdb.store_artist_tracks_in_database(artist_name, list(unique_tracks), related_tracks_objects)
-                # Retrieving all related track
+                # Retrieving all related tracks
                 artist_tracks = mdb.artists_db[first_char].find_one({"name": artist_name}, {'_id': 0, 'top_tracks': 1, 'related_tracks': 1})
                 if artist_tracks:
                     top_tracks = artist_tracks.get('top_tracks', [])

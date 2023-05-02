@@ -10,7 +10,7 @@
 .each {
   display: flex;
   flex-direction: row;
-  align-items: left;
+  align-items: center;
   gap: 20px;
   box-sizing: border-box;
   padding: 0;
@@ -24,7 +24,7 @@
 
 .item {
   display: flex;
-  align-items: left;
+  align-items: center;
   gap: 20px;
   padding: 0;
   overflow: hidden;

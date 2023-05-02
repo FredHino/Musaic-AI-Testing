@@ -1,9 +1,9 @@
 import axios from 'axios';
 import queryString from 'query-string';
 
-const clientId = "d61c30ac252d47c69fdb5b41ed844e6f";
-const clientSecret = "531f25eb0fb34ac9a8720a7c347dc05d";
-const redirectUri = "https://musaic-ai-testing-kr37.vercel.app/callback";
+const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
+const clientSecret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET;
+const redirectUri = process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI;
 
 export const getAuthorizeUrl = () => {
   const params = {

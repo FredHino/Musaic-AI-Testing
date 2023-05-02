@@ -16,7 +16,7 @@ class handler(BaseHTTPRequestHandler):
         print(f"Deleting playlist: {playlist_id} for user: {user_id}")  # Add print statement
 
         remove_playlist_from_user(user_id, playlist_id)
-        # we need to add a call to spotify helper to delete here
+        # we need to add a call to spotify helper to delete here too
 
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
