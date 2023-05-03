@@ -1,9 +1,9 @@
 import axios from 'axios';
 import queryString from 'query-string';
 
-const clientId = "d61c30ac252d47c69fdb5b41ed844e6f";
-const clientSecret = "531f25eb0fb34ac9a8720a7c347dc05d";
-const redirectUri = "https://musaic-ai-testing-kr37.vercel.app/callback";
+const clientId = "667a8f68138a40f3a6a030b08cebdb62";
+const clientSecret = "1ebc976bec0a46728304e84c08a65367";
+const redirectUri = "https://react-top-tracks-xi.vercel.app/callback";
 
 export const getAuthorizeUrl = () => {
   const params = {
